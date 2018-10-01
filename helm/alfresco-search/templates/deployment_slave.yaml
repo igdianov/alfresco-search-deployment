@@ -2,19 +2,19 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "alfresco-search.fullName" . }}-solr
+  name: {{ template "alfresco-search.fullName" . }}-solr-slave
   labels:
-    app: {{ template "alfresco-search.fullName" . }}-solr
+    app: {{ template "alfresco-search.fullName" . }}-solr-slave
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
     component: search
 spec:
-  replicas: {{ .Values.master.replicaCount }}
+  replicas: {{ .Values.slave.replicaCount }}
   template:
     metadata:
       labels:
-        app: {{ template "alfresco-search.fullName" . }}-solr
+        app: {{ template "alfresco-search.fullName" . }}-solr-slave
         release: {{ .Release.Name }}
     spec:
       {{- if .Values.common.registryPullSecrets }}
@@ -28,15 +28,15 @@ spec:
           imagePullPolicy: {{ template "alfresco-search.pullPolicy" . }}
           envFrom:
           - configMapRef:
-              name: {{ template "alfresco-search.fullName" . }}-solr-configmap
+              name: {{ template "alfresco-search.fullName" . }}-solr-slave-configmap
           ports:
             - containerPort: {{ template "alfresco-search.internalPort" . }}
           resources:
-{{ toYaml .Values.master.resources | indent 12 }}
+{{ toYaml .Values.slave.resources | indent 12 }}
           volumeMounts:
           - name: data
             mountPath: {{ .Values.common.persistence.search.data.mountPath }}
-            subPath: {{ .Values.master.persistence.search.data.subPath }}
+            subPath: {{ .Values.slave.persistence.search.data.subPath }}
       initContainers:
         - name: init-db
           image: busybox
@@ -45,8 +45,8 @@ spec:
           volumeMounts:
           - name: data
             mountPath: {{ .Values.common.persistence.search.data.mountPath }}
-            subPath: {{ .Values.master.persistence.search.data.subPath }}
+            subPath: {{ .Values.slave.persistence.search.data.subPath }}
       volumes:
       - name: data
         persistentVolumeClaim:
-          claimName: {{ .Values.master.persistence.existingClaim }}
+          claimName: {{ .Values.slave.persistence.existingClaim }}

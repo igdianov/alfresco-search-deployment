@@ -2,18 +2,19 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "alfresco-search.fullName" . }}-solr
+  name: {{ template "alfresco-search.fullName" . }}-solr-slave
   labels:
+    # FIXME: Need to be fixed for the networkpolicies
     app: {{ template "alfresco-search.fullName" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  type: {{ .Values.master.service.type }}
+  type: {{ .Values.slave.service.type }}
   ports:
-    - port: {{ .Values.master.service.externalPort }}
+    - port: {{ .Values.slave.service.externalPort }}
       targetPort: {{ template "alfresco-search.internalPort" . }}
-      name: {{ .Values.master.service.name }}
+      name: {{ .Values.slave.service.name }}
   selector:
-    app: {{ template "alfresco-search.fullName" . }}-solr
+    app: {{ template "alfresco-search.fullName" . }}-solr-slave
     release: {{ .Release.Name }}

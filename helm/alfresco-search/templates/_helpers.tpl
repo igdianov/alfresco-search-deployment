@@ -8,7 +8,7 @@ THE TEMPLATES DEFINED BELOW WILL BE USED BY OTHER CHARTS.
 Get Alfresco Search Full Name
 */}}
 {{- define "alfresco-search.fullName" -}}
-{{- $name := default .Chart.Name .Values.nameOverride -}}
+{{- $name := default .Chart.Name .Values.common.nameOverride -}}
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
@@ -23,7 +23,7 @@ Get Alfresco Search Host
 Get Alfresco Search Port
 */}}
 {{- define "alfresco-search.port" -}}
-{{- print (index .Values "alfresco-search" "service" "externalPort") -}}
+{{- print (index .Values "alfresco-search" "master" "service" "externalPort") -}}
 {{- end -}}
 
 {{/* ======================================================================== */}}
@@ -34,10 +34,10 @@ Get Alfresco Search Port
 Get Alfresco Search Internal Port
 */}}
 {{- define "alfresco-search.internalPort" -}}
-{{- if and (.Values.type) (eq (.Values.type | toString) "insight-engine") }}
-{{- print .Values.insightEngineImage.internalPort -}}
+{{- if and (.Values.common.type) (eq (.Values.common.type | toString) "insight-engine") }}
+{{- print .Values.common.insightEngineImage.internalPort -}}
 {{- else }}
-{{- print .Values.searchServicesImage.internalPort -}}
+{{- print .Values.common.searchServicesImage.internalPort -}}
 {{- end }}
 {{- end -}}
 
@@ -45,10 +45,10 @@ Get Alfresco Search Internal Port
 Get Alfresco Search Pull Policy
 */}}
 {{- define "alfresco-search.pullPolicy" -}}
-{{- if and (.Values.type) (eq (.Values.type | toString) "insight-engine") }}
-{{- print .Values.insightEngineImage.pullPolicy -}}
+{{- if and (.Values.common.type) (eq (.Values.common.type | toString) "insight-engine") }}
+{{- print .Values.common.insightEngineImage.pullPolicy -}}
 {{- else }}
-{{- print .Values.searchServicesImage.pullPolicy -}}
+{{- print .Values.common.searchServicesImage.pullPolicy -}}
 {{- end }}
 {{- end -}}
 
@@ -56,9 +56,9 @@ Get Alfresco Search Pull Policy
 Get Alfresco Search Docker Image
 */}}
 {{- define "alfresco-search.dockerImage" -}}
-{{- if and (.Values.type) (eq (.Values.type | toString) "insight-engine") }}
-{{- printf "%s:%s" .Values.insightEngineImage.repository .Values.insightEngineImage.tag -}}
+{{- if and (.Values.common.type) (eq (.Values.common.type | toString) "insight-engine") }}
+{{- printf "%s:%s" .Values.common.insightEngineImage.repository .Values.common.insightEngineImage.tag -}}
 {{- else }}
-{{- printf "%s:%s" .Values.searchServicesImage.repository .Values.searchServicesImage.tag -}}
+{{- printf "%s:%s" .Values.common.searchServicesImage.repository .Values.common.searchServicesImage.tag -}}
 {{- end }}
 {{- end -}}
