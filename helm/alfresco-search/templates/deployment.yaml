@@ -8,6 +8,7 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+    # FIXME: Check for network policies
     component: search
 spec:
   replicas: {{ .Values.master.replicaCount }}
