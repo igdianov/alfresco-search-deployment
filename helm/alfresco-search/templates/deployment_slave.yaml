@@ -1,3 +1,4 @@
+{{- if .Values.slave.enabled }}
 # Defines the deployment for the Alfresco Search (Solr) App
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -9,7 +10,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
     # FIXME: Check for network policies
-    component: search
+    component: search-slave
 spec:
   replicas: {{ .Values.slave.replicaCount }}
   template:
@@ -24,7 +25,8 @@ spec:
         - name: {{ .Values.common.registryPullSecrets }}
       {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
+        # FIXME: Check for network policies
+        - name: {{ .Chart.Name }}-slave
           image: {{ template "alfresco-search.dockerImage" . }}
           imagePullPolicy: {{ template "alfresco-search.pullPolicy" . }}
           envFrom:
@@ -51,3 +53,4 @@ spec:
       - name: data
         persistentVolumeClaim:
           claimName: {{ .Values.slave.persistence.existingClaim }}
+{{- end }}

@@ -72,7 +72,8 @@ master:
       data:
         subPath: "alfresco-content-services/solr-data"
 
-slave: 
+slave:
+  enabled: false
   <<: *commonConfig
   service:
     <<: *serviceConfig

@@ -24,6 +24,7 @@ spec:
         - name: {{ .Values.common.registryPullSecrets }}
       {{- end }}
       containers:
+        # FIXME: Check for network policies
         - name: {{ .Chart.Name }}
           image: {{ template "alfresco-search.dockerImage" . }}
           imagePullPolicy: {{ template "alfresco-search.pullPolicy" . }}

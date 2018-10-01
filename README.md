@@ -1,6 +1,5 @@
 # Alfresco Search Deployment
 
-
 ```
 helm install alfresco-content-services-1.1.4.tgz \
 --set externalProtocol="https" \
@@ -21,6 +20,7 @@ helm install alfresco-content-services-1.1.4.tgz \
 --set alfresco-search.common.ingress.enabled=true \
 --set alfresco-search.common.ingress.basicAuth="YWRtaW46JGFwcjEkWVZsY1BhanEkUTNjOTBKZlptYklhZHo5YmZjbmNXLg==" \
 --set alfresco-search.common.ingress.whitelist_ips="0.0.0.0/0" \
+--set alfresco-search.slave.enabled=true \
 --set alfresco-insight-zeppelin.enabled=true \
 --set alfresco-search.alfresco-insight-zeppelin.registryPullSecrets="quay-registry-secret" \
 --set networkpolicysetting.enabled=false \

@@ -1,10 +1,11 @@
+{{- if .Values.slave.enabled }}
 # Defines the service for the Alfresco Search (Solr) App
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ template "alfresco-search.fullName" . }}-solr-slave
   labels:
-    # FIXME: Need to be fixed for the networkpolicies
+    # FIXME: Check for network policies
     app: {{ template "alfresco-search.fullName" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
@@ -18,3 +19,4 @@ spec:
   selector:
     app: {{ template "alfresco-search.fullName" . }}-solr-slave
     release: {{ .Release.Name }}
+{{- end }}

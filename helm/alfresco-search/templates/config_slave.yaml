@@ -1,3 +1,4 @@
+{{- if .Values.slave.enabled }}
 # Defines the properties required by the Alfresco Search (Solr) App
 apiVersion: v1
 kind: ConfigMap
@@ -20,3 +21,4 @@ data:
   {{ $key }}: {{ $val | quote }}
   {{- end }}
   {{- end }}
+{{- end }}

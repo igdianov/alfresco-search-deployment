@@ -1,4 +1,4 @@
-{{- if .Values.slave.ingress.enabled }}
+{{- if and (.Values.slave.enabled) (.Values.slave.ingress.enabled) }}
 # Defines the ingress for the Alfresco Search (Solr) App
 apiVersion: extensions/v1beta1
 kind: Ingress
