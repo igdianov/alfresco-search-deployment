@@ -13,13 +13,12 @@ common: &commonConfig
   type: "search-services"
   searchServicesImage:
     repository: alfresco/alfresco-search-services
-    tag: "1.2.0"
+    tag: "latest"
     pullPolicy: &searchDockerImagePullPolicy Always
     internalPort: &searchDockerImageInternalPort 8983
   insightEngineImage:
     repository: quay.io/alfresco/insight-engine
-    # FIXME: Add the correct tag after the development/testing has finished
-    tag: "feature-SEARCH-1071_Master_slave_config-1.1.0-SNAPSHOT-4f6e87b"
+    tag: "latest"
     pullPolicy: *searchDockerImagePullPolicy
     internalPort: *searchDockerImageInternalPort
   service: &serviceConfig
@@ -62,10 +61,9 @@ master:
     externalPort: &searchExternalPort 80
   environment:
     <<: *environmentConfig
-    REPLICATION: master
+    REPLICATION_TYPE: master
     REPLICATION_AFTER: commit,startup
-    # FIXME: Config files are not applied
-    CONFIG_FILES: schema.xml,stopwords.txt
+    REPLICATION_CONFIG_FILES: schema.xml,stopwords.txt
   persistence:
     <<: *persistenceConfig
     search:
@@ -80,11 +78,11 @@ slave:
     externalPort: 81
   environment:
     <<: *environmentConfig
-    REPLICATION: slave
-    MASTER_PORT: *searchExternalPort
-    MASTER_PROTOCOL: http
-    CORE_NAME: alfresco
-    POLL_INTERVAL: 00:00:60
+    REPLICATION_TYPE: slave
+    REPLICATION_MASTER_PORT: *searchExternalPort
+    REPLICATION_MASTER_PROTOCOL: http
+    REPLICATION_CORE_NAME: alfresco
+    REPLICATION_POLL_INTERVAL: 00:00:60
   persistence:
     <<: *persistenceConfig
     search:
