@@ -14,7 +14,7 @@ data:
   SOLR_ALFRESCO_PORT: "{{ .Values.common.repository.port }}"
   SOLR_SOLR_HOST: "{{ template "alfresco-search.fullName" . }}-solr-slave"
   SOLR_SOLR_PORT: "{{ .Values.slave.service.externalPort }}"
-  MASTER_HOST: "{{ template "alfresco-search.fullName" . }}-solr"
+  REPLICATION_MASTER_HOST: "{{ template "alfresco-search.fullName" . }}-solr"
   # The values for SOLR_CREATE_ALFRESCO_DEFAULTS and SOLR_OPTS, defined in the values.yaml for "search" are set next:
   {{- if .Values.slave.environment }}
   {{- range $key, $val := .Values.slave.environment }}
