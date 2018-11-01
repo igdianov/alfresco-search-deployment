@@ -12,6 +12,9 @@ metadata:
     # FIXME: Check for network policies
     component: search-slave
 spec:
+  selector:
+    matchLabels:
+      app: {{ template "alfresco-search.fullName" . }}-solr-slave
   replicas: {{ .Values.slave.replicaCount }}
   template:
     metadata:
@@ -19,6 +22,15 @@ spec:
         app: {{ template "alfresco-search.fullName" . }}-solr-slave
         release: {{ .Release.Name }}
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: solrslave
+                operator: In
+                values:
+                - "true"
       {{- if .Values.common.registryPullSecrets }}
       # only set this secret if a private docker registry variable is defined
       imagePullSecrets:

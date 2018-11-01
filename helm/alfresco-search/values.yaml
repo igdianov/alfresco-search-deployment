@@ -13,7 +13,7 @@ common: &commonConfig
   type: "search-services"
   searchServicesImage:
     repository: alfresco/alfresco-search-services
-    tag: "latest"
+    tag: "1.2.0"
     pullPolicy: &searchDockerImagePullPolicy Always
     internalPort: &searchDockerImageInternalPort 8983
   insightEngineImage:
@@ -75,7 +75,7 @@ slave:
   <<: *commonConfig
   service:
     <<: *serviceConfig
-    externalPort: 81
+    externalPort: 80
   environment:
     <<: *environmentConfig
     REPLICATION_TYPE: slave
@@ -88,3 +88,6 @@ slave:
     search:
       data:
         subPath: "alfresco-content-services/solr-data-slave"
+  ingress:
+    enabled: true
+    path: /solr-slave
