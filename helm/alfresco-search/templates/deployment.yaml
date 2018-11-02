@@ -17,6 +17,14 @@ spec:
         app: {{ template "alfresco-search.fullName" . }}-solr
         release: {{ .Release.Name }}
     spec:
+    {{- with .Values.affinity }}
+      affinity:
+{{ tpl . $ | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
       {{- if .Values.registryPullSecrets }}
       # only set this secret if a private docker registry variable is defined
       imagePullSecrets:
@@ -49,4 +57,4 @@ spec:
       volumes:
       - name: data
         persistentVolumeClaim:
-          claimName: {{ .Values.persistence.existingClaim }}
+          claimName: "{{ .Values.persistence.existingClaim | default (printf "%s-solr-claim" (include "alfresco-search.fullName" .)) }}"
