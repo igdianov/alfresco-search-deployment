@@ -54,18 +54,19 @@ persistence:
       subPath: "alfresco-content-services/solr-data"
 alfresco-insight-zeppelin:
   enabled: false
-
-affinity: |
-  nodeAffinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      nodeSelectorTerms:
-        - matchExpressions:
-          - key: "SolrMasterOnly"
-            operator: In
-            values:
-            - "true"
-tolerations:
-- key: "SolrMasterOnly"
-  operator: "Equal"
-  value: "true"
-  effect: "NoSchedule"
+  
+# Define Affinity and tolerations to define scheduling for SOLR
+# affinity: |
+#   nodeAffinity:
+#     requiredDuringSchedulingIgnoredDuringExecution:
+#       nodeSelectorTerms:
+#         - matchExpressions:
+#           - key: "SolrMasterOnly"
+#             operator: In
+#             values:
+#             - "true"
+# tolerations:
+# - key: "SolrMasterOnly"
+#   operator: "Equal"
+#   value: "true"
+#   effect: "NoSchedule"
