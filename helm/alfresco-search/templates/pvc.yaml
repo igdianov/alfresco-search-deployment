@@ -1,7 +1,38 @@
-kind: PersistentVolumeClaim
 apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ template "alfresco-search.fullName" . }}-solr-pv
+  labels:
+    app: {{ template "alfresco-search.fullName" . }}-solr
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: search
+spec:
+  capacity:
+    storage: "10Gi" 
+  accessModes:
+    - "ReadWriteOnce"
+  {{- with .Values.PvNodeAffinity }}
+  nodeAffinity:
+{{ toYaml . | indent 4 }}
+  {{- end }}
+  {{- with .Values.persistence.EbsPvConfiguration }}
+  awsElasticBlockStore:
+{{ toYaml . | indent 4 }}
+  {{- end }}
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
 metadata:
   name: {{ template "alfresco-search.fullName" . }}-solr-claim
+  labels:
+    app: {{ template "alfresco-search.fullName" . }}-solr
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: search
 spec:
   accessModes:
     - ReadWriteOnce
