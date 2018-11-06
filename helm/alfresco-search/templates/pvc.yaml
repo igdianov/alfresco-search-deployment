@@ -1,3 +1,4 @@
+{{- if .Values.persistence.EbsPvConfiguration.volumeID }}
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -11,6 +12,7 @@ metadata:
 spec:
   capacity:
     storage: "10Gi" 
+  storageClassName: {{ template "alfresco-search.fullName" . }}-solr-sc
   accessModes:
     - "ReadWriteOnce"
   {{- with .Values.PvNodeAffinity }}
@@ -22,7 +24,7 @@ spec:
 {{ toYaml . | indent 4 }}
   {{- end }}
 ---
-
+{{- end }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -40,3 +42,6 @@ spec:
   resources:
     requests:
       storage: 10Gi
+  {{- if .Values.persistence.EbsPvConfiguration.volumeID }}
+  storageClassName: {{ template "alfresco-search.fullName" . }}-solr-sc
+  {{- end }}
