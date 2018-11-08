@@ -48,6 +48,7 @@ resources:
 # the solr data folder containing the indexes for the alfresco-search-services is mapped to alfresco-content-services/solr-data
 persistence:
   # existingClaim: "search-master-claim" #Only define if you have a specific claim already created
+  VolumeSizeRequest: 10Gi
   search:
     data:
       mountPath: "/opt/alfresco-search-services/data"

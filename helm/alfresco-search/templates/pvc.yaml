@@ -41,7 +41,7 @@ spec:
   volumeMode: Filesystem
   resources:
     requests:
-      storage: 10Gi
+      storage: {{ .Values.persistence.VolumeSizeRequest }}
   {{- if .Values.persistence.EbsPvConfiguration.volumeID }}
   storageClassName: {{ template "alfresco-search.fullName" . }}-solr-sc
   {{- end }}
