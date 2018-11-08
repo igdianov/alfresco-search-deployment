@@ -11,7 +11,7 @@ metadata:
     component: search
 spec:
   capacity:
-    storage: "10Gi" 
+    storage: {{ .Values.persistence.VolumeSizeRequest }}
   storageClassName: {{ template "alfresco-search.fullName" . }}-solr-sc
   accessModes:
     - "ReadWriteOnce"
