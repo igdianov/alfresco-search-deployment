@@ -1,6 +1,7 @@
 # Alfresco Search Deployment
 
 This Helm chart will deploy Search Services.
+
 It offers you the posibility of setting affinity and tolerations for the search pod:
 
 ```bash
