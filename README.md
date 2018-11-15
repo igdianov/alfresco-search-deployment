@@ -1,7 +1,7 @@
 # Alfresco Search Deployment
 
 ## Contents of this repository
-a) Alfresco Content Services deployed via `docker-compose`
+a) Alfresco Content Services deployed via [docker-compose](docker-compose/docker-compose.yml)
 1. Alfresco Repository
 2. Alfresco Share
 3. A Postgres DB  
@@ -75,4 +75,4 @@ Please use [this guide](CONTRIBUTING.md) to make a contribution to the project a
 This project contains the code for starting the entire Alfresco Content Services (Enterprise) product with **Docker** or **Kubernetes**.
 
 ## Other Information
-Checkout [acs-deployment](https://github.com/Alfresco/acs-deployment/blob/master/README.md#other-information)
+Checkout [acs-deployment](https://github.com/Alfresco/acs-deployment/blob/master/README.md#other-information) readme.
