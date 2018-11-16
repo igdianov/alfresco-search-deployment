@@ -5,10 +5,12 @@ a) Alfresco Content Services deployed via [docker-compose](docker-compose/docker
 1. Alfresco Repository
 2. Alfresco Share
 3. A Postgres DB  
-4. Alfresco Insight Engine (under Quay.io repository)
-5. Insight Zeppelin (under Quay.io repository)
+4. Alfresco Insight Engine (Quay.io access is required. Please [contact support](http://support.alfresco.com/) if you don’t yet have it)
+5. Alfresco Insight Zeppelin (Quay.io access is required. Please [contact support](http://support.alfresco.com/) if you don’t yet have it)
 
-b) Alfresco Search (`alfresco-search`) helm charts used as a requirement under [acs-deployment/helm/alfresco-content-services](https://github.com/Alfresco/acs-deployment/tree/master/helm/alfresco-content-services) Chart
+b) Alfresco Search ([alfresco-search](./helm/alfresco-search)) helm charts used as a requirement under [acs-deployment/helm/alfresco-content-services](https://github.com/Alfresco/acs-deployment/tree/master/helm/alfresco-content-services) Chart
+
+>:exclamation: you cannot deploy Alfresco Search helm chart by its own, you will need the [acs-deployment/helm/alfresco-content-services](https://github.com/Alfresco/acs-deployment/tree/master/helm/alfresco-content-services) helm chart for this.
 
 
 ## Alfresco Search - Helm Chart
@@ -18,56 +20,19 @@ b) Alfresco Search (`alfresco-search`) helm charts used as a requirement under [
 * [Deploying with Helm charts on AWS using EKS](https://github.com/Alfresco/acs-deployment/tree/master/docs/helm-deployment-aws_eks.md)
 
 ### Configurations
-a) setting affinity and tolerations for the search pod:
 
-```bash
-# Define Affinity and Tolerations used for scheduling SOLR on Pod and PV level
+The following table lists the configurable parameters of the [Alfresco Search](./helm/alfresco-search) chart and their default values. 
 
-affinity: |
-  nodeAffinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      nodeSelectorTerms:
-        - matchExpressions:
-          - key: "SolrMasterOnly"
-            operator: In
-            values:
-            - "true"
+>For Alfresco Content Service chart please consult [this table](https://github.com/Alfresco/acs-deployment/blob/master/helm/alfresco-content-services/README.md#configuration).
 
-tolerations:
-- key: "SolrMasterOnly"
-  operator: "Equal"
-  value: "true"
-  effect: "NoSchedule"
-```
-
-b) creates its own PVC to store indexes if no other existingPVC is given with persistence.existingClaim
-
-```bash
-persistence:
-  existingClaim: #Only define if you have a pvc already defined
-```
-
-c) offers the posibility of attaching a specific AWS EBS
-
-```bash
-persistence:
-  EbsPvConfiguration:
-    fsType: ext4
-    volumeID: volumeEC2
-```
-
-d) gives you the option of setting affinity for the persistent volume.
-
-```bash
-PvNodeAffinity:
-  required:    
-    nodeSelectorTerms:
-    - matchExpressions:
-      - key: "SolrMasterOnly"
-        operator: In
-        values:
-        - "true"
-```
+Parameter | Description | Default
+--- | --- | ---
+`alfresco-search.type` | Define the type of Alfresco Search to use. Available options: `insight-engine` or `search-services` | `search-services`
+`alfresco-search.registryPullSecrets` | As the Docker Image for Insight Engine is not publicly available the registryPullSecrets has to be set. More details on [SECRETS.md](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/SECRETS.md) | NONE  
+`alfresco-search.ingress.enabled` | Enable external access for Alfresco Search Services | `true`
+`alfresco-search.ingress.basicAuth` | if `ingress.enabled=true`, user needs to provide a base64 encoded htpasswd format user name & password (ex: echo -n "$(htpasswd -nbm solradmin somepassword)" where solradmin is username and somepassword is the password) | NONE
+`alfresco-search.ingress.whitelist_ips` | if `ingress.enabled=true`, user can restrict /solr to a list of IP addresses of CIDR notation | `0.0.0.0/0`
+`alfresco-search.alfresco-insight-zeppelin.enabled` | Enabled Alfresco Insight Zeppelin | `false`
 
 ## Contributing guide
 Please use [this guide](CONTRIBUTING.md) to make a contribution to the project and information to report any issues.
@@ -75,4 +40,8 @@ Please use [this guide](CONTRIBUTING.md) to make a contribution to the project a
 This project contains the code for starting the entire Alfresco Content Services (Enterprise) product with **Docker** or **Kubernetes**.
 
 ## Other Information
-Checkout [acs-deployment](https://github.com/Alfresco/acs-deployment/blob/master/README.md#other-information) readme.
+* Checkout [acs-deployment](https://github.com/Alfresco/acs-deployment/blob/master/README.md#other-information) readme.
+
+## Blog Posts
+* [Alfresco Embraces Amazon EKS](https://www.alfresco.com/blogs/alfresco-embraces-amazon-eks/) by Harry Peek
+* Introduction of a [containerized deployment option with Alfresco Content Services 6.0](https://community.alfresco.com/community/ecm/blog/2018/07/11/alfresco-content-services-60-now-available) by Christian Finzel
