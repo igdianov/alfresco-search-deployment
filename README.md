@@ -36,7 +36,5 @@ Parameter | Description | Default
 ## Contributing guide
 Please use [this guide](CONTRIBUTING.md) to make a contribution to the project and information to report any issues.
 
-This project contains the code for starting the entire Alfresco Content Services (Enterprise) product with **Docker** or **Kubernetes**.
-
 ## Other Information
 * Checkout [acs-deployment](https://github.com/Alfresco/acs-deployment/blob/master/README.md#other-information) readme.
