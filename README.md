@@ -10,8 +10,7 @@ a) Alfresco Content Services deployed via [docker-compose](docker-compose/docker
 
 b) Alfresco Search ([alfresco-search](./helm/alfresco-search)) helm charts used as a requirement under [acs-deployment/helm/alfresco-content-services](https://github.com/Alfresco/acs-deployment/tree/master/helm/alfresco-content-services) Chart
 
->:exclamation: you cannot deploy Alfresco Search helm chart by its own, you will need the [acs-deployment/helm/alfresco-content-services](https://github.com/Alfresco/acs-deployment/tree/master/helm/alfresco-content-services) helm chart for this.
-
+>:exclamation: Search Services will be deployed as part of ACS and it is defined as a requirement in [ACS helm chart](https://github.com/Alfresco/acs-deployment/tree/master/helm/alfresco-content-services).
 
 ## Alfresco Search - Helm Chart
 
@@ -28,11 +27,11 @@ The following table lists the configurable parameters of the [Alfresco Search](.
 Parameter | Description | Default
 --- | --- | ---
 `alfresco-search.type` | Define the type of Alfresco Search to use. Available options: `insight-engine` or `search-services` | `search-services`
-`alfresco-search.registryPullSecrets` | As the Docker Image for Insight Engine is not publicly available the registryPullSecrets has to be set. More details on [SECRETS.md](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/SECRETS.md) | NONE  
+`alfresco-search.registryPullSecrets` | As the Docker Image for Insight Engine is not publicly available the registryPullSecrets has to be set. More details on [SECRETS.md](https://github.com/Alfresco/alfresco-anaxes-shipyard/blob/master/SECRETS.md). (_By default, you don't need to set this property if your are using only the SearchServices image from [DockerHub](https://hub.docker.com/r/alfresco/alfresco-search-services/tags/) - this is public available._) ) | NONE  
 `alfresco-search.ingress.enabled` | Enable external access for Alfresco Search Services | `true`
-`alfresco-search.ingress.basicAuth` | if `ingress.enabled=true`, user needs to provide a base64 encoded htpasswd format user name & password (ex: echo -n "$(htpasswd -nbm solradmin somepassword)" where solradmin is username and somepassword is the password) | NONE
+`alfresco-search.ingress.basicAuth` | if `alfresco-search.ingress.enabled` is `true`, user needs to provide a `base64` encoded `htpasswd` format user name & password (ex: `echo -n "$(htpasswd -nbm solradmin somepassword)"` where `solradmin` is username and `somepassword` is the password) | NONE
 `alfresco-search.ingress.whitelist_ips` | if `ingress.enabled=true`, user can restrict /solr to a list of IP addresses of CIDR notation | `0.0.0.0/0`
-`alfresco-search.alfresco-insight-zeppelin.enabled` | Enabled Alfresco Insight Zeppelin | `false`
+`alfresco-search.alfresco-insight-zeppelin.enabled` | Enabled Alfresco Insight Zeppelin (_this will work only with InsightEngine image_) | `false`
 
 ## Contributing guide
 Please use [this guide](CONTRIBUTING.md) to make a contribution to the project and information to report any issues.
@@ -41,7 +40,3 @@ This project contains the code for starting the entire Alfresco Content Services
 
 ## Other Information
 * Checkout [acs-deployment](https://github.com/Alfresco/acs-deployment/blob/master/README.md#other-information) readme.
-
-## Blog Posts
-* [Alfresco Embraces Amazon EKS](https://www.alfresco.com/blogs/alfresco-embraces-amazon-eks/) by Harry Peek
-* Introduction of a [containerized deployment option with Alfresco Content Services 6.0](https://community.alfresco.com/community/ecm/blog/2018/07/11/alfresco-content-services-60-now-available) by Christian Finzel
