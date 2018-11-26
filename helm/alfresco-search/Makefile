@@ -20,7 +20,7 @@ clean:
 package: build	
 	helm init --client-only
 	helm package .	
-	helm search local/alfresco-search -l
+	helm search local/$(NAME) -l
 	rm -rf ${NAME}*.tgz%
 
 tag:
@@ -35,8 +35,8 @@ else
 	exit -1
 endif
 
-push-tag:	
+tag-release:	
 	git add --all
-	git commit -m "release alfresco-search v.$(RELEASE_VERSION) chart" --allow-empty # if first release then no verion update is performed
+	git commit -m "release $(NAME) v.$(RELEASE_VERSION) chart" --allow-empty # if first release then no verion update is performed
 	git tag -fa v$(RELEASE_VERSION) -m "Release version $(RELEASE_VERSION)"
 	git push origin v$(RELEASE_VERSION)
