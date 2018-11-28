@@ -57,7 +57,14 @@ persistence:
     fsType: ext4
 alfresco-insight-zeppelin:
   enabled: false
-
+readinessProbe:
+  initialDelaySeconds: 60
+  periodSeconds: 20
+  timeoutSeconds: 10
+livenessProbe:
+  initialDelaySeconds: 130
+  periodSeconds: 20
+  timeoutSeconds: 10
 # Define Affinity and Tolerations used for scheduling SOLR on Pod and PV level
 
 # affinity: |
