@@ -11,6 +11,7 @@ metadata:
     # FIXME: Check for network policies
     component: search
 spec:
+  replicas: {{ .Values.master.replicaCount }}
   selector:
     matchLabels:
       app: {{ template "alfresco-search.fullName" . }}-solr

@@ -13,7 +13,7 @@ common: &commonConfig
   type: "search-services"
   searchServicesImage:
     repository: alfresco/alfresco-search-services
-    tag: "1.2.0"
+    tag: "latest"
     pullPolicy: &searchDockerImagePullPolicy Always
     internalPort: &searchDockerImageInternalPort 8983
   insightEngineImage:
