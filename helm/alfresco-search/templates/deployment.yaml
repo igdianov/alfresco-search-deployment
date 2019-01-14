@@ -45,21 +45,21 @@ spec:
           - name: data
             mountPath: {{ .Values.persistence.search.data.mountPath }}
             subPath: {{ .Values.persistence.search.data.subPath }}
-          readinessProbe:
-            httpGet:
-              path: /solr
-              port: {{ template "alfresco-search.internalPort" . }}
-            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
-            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
-            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
-          livenessProbe:
-            httpGet:
-              path: /solr/alfresco/admin/ping
-              port: {{ template "alfresco-search.internalPort" . }}
-            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
-            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
-            failureThreshold: 1
-            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+          # readinessProbe:
+          #   httpGet:
+          #     path: /solr
+          #     port: {{ template "alfresco-search.internalPort" . }}
+          #   initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          #   periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+          #   timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+          # livenessProbe:
+          #   httpGet:
+          #     path: /solr/alfresco/admin/ping
+          #     port: {{ template "alfresco-search.internalPort" . }}
+          #   initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          #   periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+          #   failureThreshold: 1
+          #   timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
       initContainers:
         - name: init-db
           image: busybox

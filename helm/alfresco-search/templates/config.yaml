@@ -19,3 +19,12 @@ data:
   {{ $key }}: {{ $val | quote }}
   {{- end }}
   {{- end }}
+
+  SOLR_OPTS: " {{ .Values.environment.SOLR_OPTS }}
+      {{- if .Values.tls.enabled }}
+      -Dalfresco.secureComms=https
+      {{- end }}
+      "
+  {{- if .Values.tls.enabled }}
+  SOLR_SSL_ENABLED: "true"
+  {{- end }}
