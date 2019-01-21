@@ -45,6 +45,14 @@ spec:
           - name: data
             mountPath: {{ .Values.persistence.search.data.mountPath }}
             subPath: {{ .Values.persistence.search.data.subPath }}
+          {{- if .Values.tls.enabled }}
+          - mountPath: /var/run/secrets/java.io/keystores
+            name: solr-keystore-volume
+          - mountPath: /var/run/secrets/certs
+            name: solr-certs
+          - mountPath: /var/run/secrets/cacert
+            name: ca-cert
+          {{- end }}
           readinessProbe:
             {{- if .Values.tls.enabled }}
             tcpSocket:
@@ -72,12 +80,80 @@ spec:
         - name: init-db
           image: busybox
           # command to allow solr to write to EFS volume. Details: https://issues.alfresco.com/jira/browse/DEPLOY-419
-          command: ["sh", "-c", "chown -R 1000:1000 {{ .Values.persistence.search.data.mountPath }}"]
+          command: ["sh", "-c", "chown -R 33007:33007 {{ .Values.persistence.search.data.mountPath }}"]
           volumeMounts:
           - name: data
             mountPath: {{ .Values.persistence.search.data.mountPath }}
             subPath: {{ .Values.persistence.search.data.subPath }}
+        {{- if .Values.tls.enabled }}
+        - name: pem-to-keystore
+          image: registry.access.redhat.com/redhat-sso-7/sso71-openshift:1.1-16
+          env:
+            - name: keyfile
+              value: /var/run/secrets/certs/tls.key
+            - name: crtfile
+              value: /var/run/secrets/certs/tls.crt
+            - name: keystore_pkcs12
+              value: /var/run/secrets/java.io/keystores/keystore.pkcs12
+            - name: keystore_jks
+              value: /var/run/secrets/java.io/keystores/ssl.repo.client.keystore
+            - name: keystore_metadata
+              value: /var/run/secrets/java.io/keystores/ssl-keystore-passwords.properties
+            - name: password
+              value: {{ .Values.tls.keystorePass }}
+            - name: storetype
+              value: {{ .Values.tls.keystoreType }}
+          command: ['/bin/bash']
+          args: ['-c', "openssl pkcs12 -export -inkey $keyfile -in $crtfile -out $keystore_pkcs12 -password pass:$password && keytool -importkeystore -noprompt -srckeystore $keystore_pkcs12 -srcstoretype pkcs12 -destkeystore $keystore_jks -deststoretype $storetype -storepass $password -srcstorepass $password && echo -e \"aliases=1\nkeystore.password=$password\n1.password=$password\" > $keystore_metadata"]
+          volumeMounts:
+            - mountPath: /var/run/secrets/java.io/keystores
+              name: solr-keystore-volume
+            - mountPath: /var/run/secrets/certs
+              name: solr-certs
+        - name: pem-to-truststore
+          image: registry.access.redhat.com/redhat-sso-7/sso71-openshift:1.1-16
+          env:
+            - name: ca_cert
+              value: /var/run/secrets/cacert/tls.crt
+            - name: truststore_jks
+              value: /var/run/secrets/java.io/keystores/ssl.repo.client.truststore
+            - name: keystore_metadata
+              value: /var/run/secrets/java.io/keystores/ssl-truststore-passwords.properties
+            - name: password
+              value: {{ .Values.tls.keystorePass }}    
+            - name: storetype
+              value: {{ .Values.tls.keystoreType }}
+          command: ['/bin/bash']
+          args: ['-c', "keytool -importkeystore -srckeystore $JAVA_HOME/jre/lib/security/cacerts -srcstoretype JKS -destkeystore $truststore_jks -storepass changeit -srcstorepass changeit && keytool -import -noprompt -keystore $truststore_jks -file $ca_cert -storetype $storetype -storepass changeit -alias alfresco.ca && echo -e \"aliases=alfresco.ca\nkeystore.password=$password\" > $keystore_metadata"]
+          volumeMounts:
+            - name: solr-keystore-volume
+              mountPath: /var/run/secrets/java.io/keystores
+            - name: ca-cert
+              mountPath: /var/run/secrets/cacert
+        - name: set-perms
+          image: busybox
+          env:
+            - name: keystore_dir
+              value: /var/run/secrets/java.io/keystores
+          command: ["sh", "-c", "chown -R 33007:33007 $keystore_dir"]
+          volumeMounts:
+            - name: solr-keystore-volume
+              mountPath: /var/run/secrets/java.io/keystores
+        {{- end }}
       volumes:
       - name: data
         persistentVolumeClaim:
           claimName: "{{ .Values.persistence.existingClaim | default (printf "%s-solr-claim" (include "alfresco-search.fullName" .)) }}"
+      {{- if .Values.tls.enabled }}
+      - name: solr-keystore-volume
+        emptyDir: {}
+      - name: solr-certs
+        secret:
+          secretName: {{ .Values.tls.solrTlsSecret }}
+      - name: ca-cert
+        secret:
+          secretName: {{ .Values.tls.caTlsSecret }}
+          items:
+            - key: tls.crt
+              path: tls.crt
+      {{- end }}    

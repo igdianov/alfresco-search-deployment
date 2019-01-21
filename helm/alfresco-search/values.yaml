@@ -26,6 +26,10 @@ service:
   externalPort: 80
 tls:
   enabled: false
+  caTlsSecret:
+  solrTlsSecret:
+  keystoreType: JCEKS
+  keystorePass: changeit
 ingress:
   enabled: true
   path: /solr
