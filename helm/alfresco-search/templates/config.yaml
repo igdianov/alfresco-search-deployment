@@ -26,10 +26,7 @@ data:
       {{- end }}
       "
   {{- if .Values.tls.enabled }}
-  SOLR_SSL_ENABLED: "true"
   TLS_ENABLED: "true"
   KEYSTORE_DIR: /var/run/secrets/java.io/keystores
   STORE_PASS: {{ .Values.tls.keystorePass }}
-  {{- else }}
-  TLS_ENABLED: "false"
   {{- end }}
