@@ -1,5 +1,5 @@
 name: alfresco-search
-version: 0.0.9-tls
+version: 0.0.9-with-tls
 description: A Helm chart for deploying Alfresco Search
 keywords:
 - search
