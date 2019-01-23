@@ -47,6 +47,7 @@ resources:
 # Defines the mounting points for the persistence required by the apps in the cluster
 # the solr data folder containing the indexes for the alfresco-search-services is mapped to alfresco-content-services/solr-data
 persistence:
+  enabled: true
   # existingClaim: "search-master-claim" #Only define if you have a specific claim already created
   VolumeSizeRequest: 10Gi
   search:
@@ -84,7 +85,7 @@ livenessProbe:
 #   effect: "NoSchedule"
 
 # PvNodeAffinity:
-#   required:    
+#   required:
 #     nodeSelectorTerms:
 #     - matchExpressions:
 #       - key: "SolrMasterOnly"
