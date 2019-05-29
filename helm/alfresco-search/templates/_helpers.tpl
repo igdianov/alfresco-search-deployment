@@ -34,7 +34,7 @@ Get Alfresco Search Host
 Take the fullname which is built to be used as a service name and truncate at 58 in order to append "-solr"
 */}}
 {{- define "alfresco-search.host" -}}
-{{- $name := include "alfresco-search.fullName" . -}}
+{{- $name := include "alfresco-search.fullName" | trunc 58 | trimSuffix "-" -}}
 {{- printf "%s-%s" $name "solr" -}}
 {{- end -}}
 
