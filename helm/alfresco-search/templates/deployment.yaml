@@ -64,7 +64,7 @@ spec:
         - name: init-db
           image: busybox
           # command to allow solr to write to EFS volume. Details: https://issues.alfresco.com/jira/browse/DEPLOY-419
-          command: ["sh", "-c", "chown -R 33007:33007 {{ .Values.persistence.search.data.mountPath }}"]
+          command: ["sh", "-c", "chown -R 1000:1000 {{ .Values.persistence.search.data.mountPath }}"]
           volumeMounts:
           - name: data
             mountPath: {{ .Values.persistence.search.data.mountPath }}
