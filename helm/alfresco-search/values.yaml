@@ -15,6 +15,10 @@ searchServicesImage:
   tag: "1.3.0.4"
   pullPolicy: &searchDockerImagePullPolicy Always
   internalPort: &searchDockerImageInternalPort 8983
+initContainer:
+  image:
+    repository: busybox
+    tag: latest  
 insightEngineImage:
   repository: quay.io/alfresco/insight-engine
   tag: "1.1.0.1"
